@@ -541,8 +541,7 @@ didRegisterUserNotificationSettings:(UIUserNotificationSettings *)notificationSe
         [JPUSHService handleRemoteNotification:userInfo];
         [_channel invokeMethod:@"onReceiveNotification" arguments: [self jpushFormatAPNSDic:userInfo]];
     }
-    
-    completionHandler(notificationTypes);
+     completionHandler(UNNotificationPresentationOptionNone);
 }
 
 - (void)jpushNotificationCenter:(UNUserNotificationCenter *)center didReceiveNotificationResponse:(UNNotificationResponse *)response withCompletionHandler:(void (^)())completionHandler  API_AVAILABLE(ios(10.0)){
