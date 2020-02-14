@@ -511,8 +511,11 @@ static NSMutableArray<FlutterResult>* getRidResults;
 - (bool)application:(UIApplication *)application
 didReceiveRemoteNotification:(NSDictionary *)userInfo
 fetchCompletionHandler:(void (^)(UIBackgroundFetchResult result))completionHandler {
-    
-    [_channel invokeMethod:@"onReceiveNotification" arguments:userInfo];
+    if (application.applicationState == UIApplicationStateActive) {
+        [_channel invokeMethod:@"onReceiveNotification" arguments:userInfo];
+    } else {
+        [_channel invokeMethod:@"onOpenNotification" arguments:userInfo];
+    }
     completionHandler(UIBackgroundFetchResultNoData);
     return YES;
 }
