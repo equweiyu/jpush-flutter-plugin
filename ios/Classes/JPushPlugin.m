@@ -548,18 +548,6 @@ static NSMutableArray<FlutterResult>* getRidResults;
     [JPUSHService registerDeviceToken:deviceToken];
 }
 
-- (bool)application:(UIApplication *)application
-didReceiveRemoteNotification:(NSDictionary *)userInfo
-fetchCompletionHandler:(void (^)(UIBackgroundFetchResult result))completionHandler {
-    if (application.applicationState == UIApplicationStateActive) {
-        [_channel invokeMethod:@"onReceiveNotification" arguments:userInfo];
-    } else {
-        [_channel invokeMethod:@"onOpenNotification" arguments:userInfo];
-    }
-    completionHandler(UIBackgroundFetchResultNoData);
-    return YES;
-}
-
 - (void)application:(UIApplication *)application didRegisterUserNotificationSettings:(UIUserNotificationSettings *)notificationSettings {
     NSDictionary *settingsDictionary = @{
         @"sound" : [NSNumber numberWithBool:notificationSettings.types & UIUserNotificationTypeSound],
