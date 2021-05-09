@@ -548,6 +548,18 @@ static NSMutableArray<FlutterResult>* getRidResults;
     [JPUSHService registerDeviceToken:deviceToken];
 }
 
+- (bool)application:(UIApplication *)application
+didReceiveRemoteNotification:(NSDictionary *)userInfo
+fetchCompletionHandler:(void (^)(UIBackgroundFetchResult result))completionHandler {
+    if (application.applicationState == UIApplicationStateActive) {
+        [_channel invokeMethod:@"onReceiveNotification" arguments:userInfo];
+    } else {
+        [_channel invokeMethod:@"onOpenNotification" arguments:userInfo];
+    }
+    completionHandler(UIBackgroundFetchResultNoData);
+    return YES;
+}
+
 - (void)application:(UIApplication *)application didRegisterUserNotificationSettings:(UIUserNotificationSettings *)notificationSettings {
     NSDictionary *settingsDictionary = @{
         @"sound" : [NSNumber numberWithBool:notificationSettings.types & UIUserNotificationTypeSound],
@@ -599,8 +611,7 @@ static NSMutableArray<FlutterResult>* getRidResults;
     }else{
         JPLog(@"iOS10 前台收到本地通知:userInfo：%@",userInfo);
     }
-    
-    completionHandler(notificationTypes);
+     completionHandler(UNNotificationPresentationOptionNone);
 }
 
 - (void)jpushNotificationCenter:(UNUserNotificationCenter *)center didReceiveNotificationResponse:(UNNotificationResponse *)response withCompletionHandler:(void (^)())completionHandler  API_AVAILABLE(ios(10.0)){
